@@ -10,12 +10,13 @@ class Notes
     while true
       Thread.start(@server.accept) do |s|
         puts("Something has connected")
-        
-        s.puts("1. Enter note\n2. View notes\n0. Exit")
-        while input = s.gets.chomp
-          break if input == "0"
+        header
 
+        while input = s.gets.chomp
+          header
           case input.to_i
+          when 0
+            break
           when 1
             s.puts("Enter note")
           when 2
@@ -31,7 +32,17 @@ class Notes
   end
 
   def view_notes
+    # Write this
+  end
 
+  def add_note
+    # Write this
+  end
+
+  private
+
+  def header
+    s.puts("1. Enter note\n2. View notes\n0. Exit")
   end
 end
 
