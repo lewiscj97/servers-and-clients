@@ -10,39 +10,48 @@ class Notes
     while true
       Thread.start(@server.accept) do |s|
         puts("Something has connected")
-        header
+        header(s)
 
         while input = s.gets.chomp
-          header
           case input.to_i
           when 0
+            s.close
             break
           when 1
-            s.puts("Enter note")
+            add_note(s)
+            header(s)
           when 2
-            s.puts("View notes")
+            view_notes(s)
+            header(s)
           else
             s.puts("Please enter a correct option")
           end
         end
-        s.close
         puts("They've gone!")
       end
     end
   end
 
-  def view_notes
-    # Write this
+  def view_notes(server)
+    server.print("\n")
+    server.puts("Notes:")
+    server.puts(@notes.join("\n"))
+    server.print("\n")
   end
 
-  def add_note
-    # Write this
+  def add_note(server)
+    server.print("\n")
+    server.print("Note: ")
+    @notes << server.gets.chomp
+    server.puts("Note added")
+    server.print("\n")
+    puts("Note added")
   end
 
   private
 
-  def header
-    s.puts("1. Enter note\n2. View notes\n0. Exit")
+  def header(server)
+    server.puts("1. Enter note\n2. View notes\n0. Exit")
   end
 end
 
