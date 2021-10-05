@@ -30,6 +30,8 @@ class Notes
         add_note(server)
       when 2
         view_notes(server)
+      when 3
+        delete_note_option(server)
       else
         server.puts('Please enter a correct option')
       end
@@ -37,15 +39,53 @@ class Notes
   end
 
   def header(server)
-    server.puts("1. Enter note\n2. View notes\n0. Exit")
+    server.puts("1. Enter note\n2. View notes\n3. Delete note\n0. Exit")
+  end
+
+  def delete_note_option(server)
+    server.puts("Type the number of the note to be deleted: ")
+    note_index = server.gets.chomp.to_i - 1
+    deleting_note(server, note_index)
+    server.print("\n")
+    header(server)
+  end
+
+  def deleting_note(server, note_index)
+    if @notes[note_index].nil?
+      no_note_at_index(server)
+    else
+      note_at_index(server, note_index)
+    end
+  end
+
+  def note_at_index(server, note_index)
+    note = @notes.delete_at(note_index)
+    server.print("\n")
+    server.puts "Note deleted: #{note}"
+    puts "Note deleted"
+  end
+
+  def no_note_at_index(server)
+    server.print("\n")
+    server.puts('There is no note at that index')
   end
 
   def view_notes(server)
     server.print("\n")
-    server.puts('Notes:')
-    server.puts(@notes.join("\n"))
-    server.print("\n")
+    @notes.empty? ? no_notes_to_show(server) : notes_to_show(server)
     header(server)
+  end
+
+  def notes_to_show(server)
+    server.puts('Notes:')
+    indexed_notes = @notes.map.with_index(1) { |note, index| "#{index}. #{note}" }
+    server.puts(indexed_notes.join("\n"))
+    server.print("\n")
+  end
+
+  def no_notes_to_show(server)
+    server.puts('There are currently no notes!')
+    server.print("\n")
   end
 
   def add_note(server)
